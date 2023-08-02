@@ -224,6 +224,10 @@ public:
     double x;
     double y;
 
+    /* Getters for backwards compatibility */
+    double getX() { return x; }
+    double getY() { return y; }
+
     /* Private section */
 
     /**********************************************************************/

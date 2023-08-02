@@ -18,8 +18,8 @@
 GDrawingSurface::GDrawingSurface()
         : _forwardTarget(nullptr),
           _backgroundColor("0xffffffff"),
-          _color(""),
-          _fillColor(""),
+          _color("black"),
+          _fillColor("black"),
           _font(""),
           _backgroundColorInt(0xffffffff),
           _colorInt(0),

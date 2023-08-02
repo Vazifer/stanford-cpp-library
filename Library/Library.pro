@@ -26,7 +26,8 @@ for(dir, LIB_SUBDIRS) {
 
 PRIVATE_HEADERS     +=  $$files(private/*.h)
 SOURCES             +=  $$files(private/*.cpp)
-HEADERS             +=  $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+HEADERS             +=  $$PUBLIC_HEADERS $$PRIVATE_HEADERS \
+    util/foreach.h
 
 RESOURCES           =   images.qrc
 OTHER_FILES         =   personaltypes.py

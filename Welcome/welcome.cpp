@@ -1,51 +1,58 @@
 /*
- * File: welcome.cpp
- * -----------------
- * Sample program used to confirm Qt/CS106 install.
- * @author Julie Zelenski
- * #version 2022/09
+ * File: Trees.cpp
+ * ---------------
+ * A program that generates trees using recursion!
  */
 
 #include <iostream>
-#include "console.h"
-#include "queue.h"
-#include "simpio.h"
+#include "random.h"
 #include "gwindow.h"
-#include "SimpleTest.h"
+#include "gobjects.h"
 using namespace std;
 
+const double kWindowWidth = 800;
+const double kWindowHeight = 400;
 
-void welcomeAlert(string name)
-{
-    GWindow* window = new GWindow(300, 200);
-    window->setTitle("Fall Quarter 2022");
-    window->setLocation(300, 100);
-    window->setExitOnClose(true);
-    window->setResizable(false);
-    window->setBackground("White");
-    window->clear();
-    window->setColor("black");
-    window->drawString("Welcome " + name + "!", 75, 175);
-    window->drawImage("res/stanford.png", 75, 25);
-    window->setColor("#008F00"); // green
-    double x = 140, y = 50, w = 15, h = 30;
-    for (int i = 0; i < 4; i++) {
-        window->fillPolygon({GPoint(x-w, y+h),GPoint(x, y),GPoint(x+w, y+h) } );
-        y += h/2;
-    }
-    window->setVisible(true);
-}
+/* Branching angle. */
+const double kMinAngle = -60;
+const double kMaxAngle = +60;
 
-int main()
-{
-    Queue<string> names = {"Leland", "Stanford", "Junior", "University"};
-    cout << "Copyright 2022 " << names << endl;
-    string name = getLine("What is your name?");
-    welcomeAlert(name);
+/* Number of branches at each tree. */
+const int kMinBranchingFactor = 3;
+const int kMaxBranchingFactor = 6;
+
+/* Maximum level of the tree. */
+const int kMaxLevel = 9;
+
+void drawTree(GWindow& window, double x, double y, double length, double theta);
+
+/* Main program */
+int main() {
+    GWindow window(kWindowWidth, kWindowHeight);
+    drawTree(window, window.getWidth() / 2.0, window.getHeight(),
+             window.getHeight(), 90);
     return 0;
 }
 
-// Confirm SimpleTest macros are available and compile
-PROVIDED_TEST("SimpleTest of addition") {
-    EXPECT_EQUAL(1 + 2, 3);
+void recDrawTree(GWindow& window, double x, double y, double length, double theta, int order) {
+    /* Drawing an order-0 tree is instantaneous. */
+    if (order == 0) return;
+
+    /* Draw the tree trunk and remember the endpoint. */
+    GPoint endpoint = window.drawPolarLine(x, y, length / 2.0, theta);
+
+    /* Determine how many child branches we should have. */
+    int numChildren = randomInteger(kMinBranchingFactor, kMaxBranchingFactor);
+
+    /* Recursively draw all child branches. */
+    for (int i = 0; i < numChildren; i++) {
+        recDrawTree(window, endpoint.getX(), endpoint.getY(),
+                    length / 2.0,
+                    theta + randomReal(kMinAngle, kMaxAngle),
+                    order - 1);
+    }
+}
+
+void drawTree(GWindow& window, double x, double y, double length, double theta) {
+    recDrawTree(window, x, y, length, theta, kMaxLevel);
 }
